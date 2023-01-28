@@ -1,33 +1,36 @@
-//(-152.3987341772152, -147.2594936708861)
-//'305.26618141514257
 
-circle_radius = 305.27;
-circle_center = [-152.4, -147.26, 0];
-
-width = 30;
-
-linear_extrude(3)
-difference() {
-    translate(circle_center)
-    circle(circle_radius, $fn=180);
-    
-    // inner circle
-    //(-242.92, -229.67)
-    // 409.4
-    translate([-277.92, -237.47])
-    circle(441.27, $fn=180);
-    
-    // remove everything on the negative x-axis
-    translate([-circle_radius * 2, -circle_radius * 2, 0])
-    square([circle_radius * 2, circle_radius * 4]);
-    
-    // remove everything on the negative y-axis
-    translate([0, -circle_radius * 2])
-    square(circle_radius * 2);
-    
-    // slicing height
-    translate([0, 38])
-    square(circle_radius * 2);
-    
-    //square([110 - width, 38]);
+module curved_handle_layer(inner_circle_center, inner_circle_radius, outer_circle_center, outer_circle_radius, z_offset = 0) {
+    translate([0, 0, z_offset])
+    linear_extrude(3)
+    difference() {
+        translate(outer_circle_center)
+        circle(outer_circle_radius, $fn=180);
+        
+        translate(inner_circle_center)
+        translate([0, 0, z_offset])
+        circle(inner_circle_radius, $fn=180);
+        
+        // remove everything on the negative x-axis
+        translate([-outer_circle_radius * 2, -outer_circle_radius * 2, 0])
+        square([outer_circle_radius * 2, outer_circle_radius * 4]);
+        
+        // remove everything on the negative y-axis
+        translate([0, -outer_circle_radius * 2])
+        square(outer_circle_radius * 2);
+        
+        // slicing height
+        translate([0, 38])
+        square(outer_circle_radius * 2);
+        
+    }
 }
+
+cockpit_outer_circle_center = [-152.4, -147.26];
+cockpit_outer_circle_radius = 305.27;
+
+cockpit_inner_circle_center = [-277.92, -237.47];
+cockpit_inner_circle_radius = 441.27;
+
+curved_handle_layer(cockpit_inner_circle_center, cockpit_inner_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + 3);
+
+curved_handle_layer(cockpit_outer_circle_center, cockpit_outer_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + 3, -3);
