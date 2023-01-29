@@ -31,8 +31,12 @@ cockpit_outer_circle_radius = 305.27;
 cockpit_inner_circle_center = [-277.92, -237.47];
 cockpit_inner_circle_radius = 441.27;
 
-curved_handle_layer(cockpit_inner_circle_center, cockpit_inner_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + 3, 3);
+ridge_width = 5;
+ridge_height = 4;
+plate_height = 3;
 
-curved_handle_layer(cockpit_outer_circle_center, cockpit_outer_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + 3, 5, -5);
+curved_handle_layer(cockpit_inner_circle_center, cockpit_inner_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, plate_height);
 
-curved_handle_layer(cockpit_outer_circle_center, cockpit_outer_circle_radius -10, cockpit_outer_circle_center, cockpit_outer_circle_radius + 3, 3, -8);
+curved_handle_layer(cockpit_outer_circle_center, cockpit_outer_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, ridge_height, -ridge_height);
+
+curved_handle_layer(cockpit_outer_circle_center, cockpit_outer_circle_radius -10, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, plate_height, -ridge_height - plate_height);
