@@ -1,5 +1,5 @@
 
-module curved_handle_layer(inner_circle_center, inner_circle_radius, outer_circle_center, outer_circle_radius, height, z_offset = 0) {
+module curved_handle_layer(inner_circle_center, inner_circle_radius, outer_circle_center, outer_circle_radius, height, piece_height, z_offset = 0) {
     translate([0, 0, z_offset])
     linear_extrude(height)
     difference() {
@@ -7,7 +7,6 @@ module curved_handle_layer(inner_circle_center, inner_circle_radius, outer_circl
         circle(outer_circle_radius, $fn=180);
         
         translate(inner_circle_center)
-        translate([0, 0, z_offset])
         circle(inner_circle_radius, $fn=180);
         
         // remove everything on the negative x-axis
@@ -19,9 +18,8 @@ module curved_handle_layer(inner_circle_center, inner_circle_radius, outer_circl
         square(outer_circle_radius * 2);
         
         // slicing height
-        translate([0, 38])
+        translate([0, piece_height])
         square(outer_circle_radius * 2);
-        
     }
 }
 
@@ -31,12 +29,16 @@ cockpit_outer_circle_radius = 305.27;
 cockpit_inner_circle_center = [-277.92, -237.47];
 cockpit_inner_circle_radius = 441.27;
 
+piece_height = 38;
 ridge_width = 5;
-ridge_height = 4;
+ridge_height = 2;
 plate_height = 3;
 
-curved_handle_layer(cockpit_inner_circle_center, cockpit_inner_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, plate_height);
+translate([0, -piece_height / 2, 0])
+union() {
+    curved_handle_layer(cockpit_inner_circle_center, cockpit_inner_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, plate_height, piece_height);
 
-curved_handle_layer(cockpit_outer_circle_center, cockpit_outer_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, ridge_height, -ridge_height);
+    curved_handle_layer(cockpit_outer_circle_center, cockpit_outer_circle_radius, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, ridge_height, piece_height, -ridge_height);
 
-curved_handle_layer(cockpit_outer_circle_center, cockpit_outer_circle_radius -10, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, plate_height, -ridge_height - plate_height);
+    curved_handle_layer(cockpit_inner_circle_center, cockpit_inner_circle_radius + 3, cockpit_outer_circle_center, cockpit_outer_circle_radius + ridge_width, plate_height, piece_height, -ridge_height - plate_height);
+}
